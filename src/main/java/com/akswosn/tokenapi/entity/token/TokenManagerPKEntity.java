@@ -1,15 +1,13 @@
-package com.akswosn.tokenapi.entity.user;
+package com.akswosn.tokenapi.entity.token;
 
 import lombok.*;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
 import javax.persistence.Id;
 import java.io.Serializable;
 
 /**
  * <pre>
- * 간략 : 사용자 Entity
+ * 간략 :
  * 상세 :
  * </pre>
  *
@@ -19,18 +17,13 @@ import java.io.Serializable;
  * -----------------------------------
  * 1.0 : 신규작성
  */
-@Entity(name = "test_user")
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Setter @Getter
+@Setter
+@Getter
 @ToString
-public class UserEntity implements Serializable {
-    @Id
-    @Column(name = "user_id")
+public class TokenManagerPKEntity implements Serializable {
     private String userId;
-
-    @Column(name = "password")
-    private String password;
-
+    private String tokenName;
 }

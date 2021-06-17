@@ -6,7 +6,7 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface UserSlaveRepository extends CrudRepository<UserEntity, Long> {
+public interface UserSlaveRepository extends CrudRepository<UserEntity, String> {
     //slave 시 insert/update/delete 차단
     @SneakyThrows
     @Override
@@ -15,7 +15,7 @@ public interface UserSlaveRepository extends CrudRepository<UserEntity, Long> {
     }
     @SneakyThrows
     @Override
-    default void deleteById(Long id){
+    default void deleteById(String id){
         throw new Exception("Block");
     }
     @SneakyThrows

@@ -3,6 +3,9 @@ server:
   port: 18081
 
 spring:
+  jwt:
+    secret: token_secret
+
   datasource:
     master:
       driver-class-name: com.mysql.cj.jdbc.Driver
@@ -15,6 +18,9 @@ spring:
       jdbcUrl: jdbc:mysql://forlks.cbbo5nrygkst.us-east-2.rds.amazonaws.com:3306/tokendbslave?useSSL=false&characterEncoding=UTF-8
       username: tokenuser
   jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MariaDBDialect
     database: mysql
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
     generate-ddl: true
