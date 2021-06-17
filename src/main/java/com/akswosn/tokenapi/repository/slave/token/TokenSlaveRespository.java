@@ -2,8 +2,10 @@ package com.akswosn.tokenapi.repository.slave.token;
 
 import com.akswosn.tokenapi.entity.token.TokenManagerEntity;
 import com.akswosn.tokenapi.entity.token.TokenManagerPKEntity;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.CrudRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -18,6 +20,6 @@ import java.util.Optional;
  * -----------------------------------
  * 1.0 : 신규작성
  */
-public interface TokenSlaveRespository extends CrudRepository<TokenManagerEntity, TokenManagerPKEntity> {
-    Optional<TokenManagerEntity> findByIdAndToken(TokenManagerPKEntity pk, String token);
+public interface TokenSlaveRespository extends JpaRepository<TokenManagerEntity, TokenManagerPKEntity> {
+    List<TokenManagerEntity> findByUserIdAndTokenNameAndToken(String userId, String tokenName, String token);
 }

@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.SQLTransientException;
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -167,11 +168,9 @@ public class AuthServiceImpl implements AuthService {
 
         //2. 토큰 user_id 와 token_manager 유효성 체크(토큰,회원 userId, tokenName(access../refresh..) 조회
         String userId = jwtService.getUserId(token);
-        Optional<TokenManagerEntity> dbData = slaveRespository.findByIdAndToken(TokenManagerPKEntity.builder()
-                .userId(userId).tokenName(tokenName)
-                .build(), token);
+        List<TokenManagerEntity> dbData = slaveRespository.findByUserIdAndTokenNameAndToken(userId, tokenName, token);
 
-        if(dbData.isPresent()){
+        if(dbData != null && dbData.size() > 0){
             return true;
         }
 

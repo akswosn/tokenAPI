@@ -2,6 +2,7 @@ package com.akswosn.tokenapi.repository.master.token;
 
 import com.akswosn.tokenapi.entity.token.TokenManagerEntity;
 import com.akswosn.tokenapi.entity.token.TokenManagerPKEntity;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.CrudRepository;
 /**
  * <pre>
@@ -15,5 +16,5 @@ import org.springframework.data.repository.CrudRepository;
  * -----------------------------------
  * 1.0 : 신규작성
  */
-public interface TokenMasterRepository extends CrudRepository<TokenManagerEntity, TokenManagerPKEntity> {
+public interface TokenMasterRepository extends JpaRepository<TokenManagerEntity, TokenManagerPKEntity> {
 }
