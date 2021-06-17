@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * <pre>
  * 간략 : 인증 컨트롤러
@@ -33,6 +35,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/auth")
 @Api(value="/api/v1/auth",description="인증 API", tags="Auth", produces = MediaType.APPLICATION_JSON_VALUE)
 public class AuthController {
+
+    @Autowired
+    private HttpServletRequest request;
 
     @Autowired
     private AuthService service;
@@ -74,4 +79,32 @@ public class AuthController {
         return response;
     }
 
+
+    @ApiOperation(value="인증 갱신 API (토큰은 header로)", notes="인증 갱신 API (토큰은 header로)")
+    @PostMapping("/refreshtoken")
+    public ResponseEntity<ResponseToken> refresh(HttpServletRequest request){
+        ResponseEntity<ResponseToken> response = null;
+
+        try{
+            // 필수값 검증
+            String refreshToken = request.getHeader("refreshToken");
+
+
+            // 갱신 서비스 호출
+            ResponseToken token = service.refresh(refreshToken);
+
+            if(token == null){
+                response = ResponseEntity.inputFail("토큰발급 실패");
+            }
+            else {
+                response = ResponseEntity.createSuccess(token);
+            }
+        }
+        catch (Exception e){
+            log.error("[POST]auth error ::: {} ", e);
+            response = ResponseEntity.fail(500, e.getMessage());
+        }
+
+        return response;
+    }
 }

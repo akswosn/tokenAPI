@@ -26,6 +26,18 @@ public interface AuthService {
      */
     public ResponseToken auth(RequestUser userEntity) throws Exception;
 
+    /**
+     * 토큰 재발급(refreshToken)
+     * @param refreshToken
+     * @return
+     * @throws Exception
+     */
+    public ResponseToken refresh(String refreshToken) throws Exception;
 
-
+    /**
+     * 토큰 검증
+     * @param token
+     * @return
+     */
+    public boolean check(String token, String tokenName) throws Exception;
 }

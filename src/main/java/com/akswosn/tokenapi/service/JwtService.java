@@ -2,10 +2,9 @@ package com.akswosn.tokenapi.service;
 
 import com.akswosn.tokenapi.entity.user.RequestUser;
 import com.akswosn.tokenapi.entity.user.UserEntity;
-import io.jsonwebtoken.JwtBuilder;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import lombok.Value;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.crypto.spec.SecretKeySpec;
 import javax.xml.bind.DatatypeConverter;
@@ -26,6 +25,7 @@ import java.util.Map;
  * -----------------------------------
  * 1.0 : 신규작성
  */
+
 public interface JwtService {
     final static long TOKEN_VALIDATION_SECOND = 1000L * 60 * 60 * 2; //2시간
     final static long REFRESH_TOKEN_VALIDATION_SECOND = 1000L * 60 * 60 * 24 * 7; //7일
@@ -72,10 +72,14 @@ public interface JwtService {
 
         return builder.compact();
     }
-    
+
+    default Claims getClaimsMutator(String token) throws ExpiredJwtException, JwtException{
+        return Jwts.parser().setSigningKey(DatatypeConverter.parseBase64Binary(SECRET_KEY))
+                .parseClaimsJws(token).getBody();
+    }
+
     
     public String createAccessToken(RequestUser userEntity)throws Exception;
     public String createRefreshToken(RequestUser userEntity)throws Exception;
-//
-//    public boolean isUsable(String jwt);
+
 }

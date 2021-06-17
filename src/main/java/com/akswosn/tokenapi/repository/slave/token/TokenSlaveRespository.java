@@ -4,6 +4,8 @@ import com.akswosn.tokenapi.entity.token.TokenManagerEntity;
 import com.akswosn.tokenapi.entity.token.TokenManagerPKEntity;
 import org.springframework.data.repository.CrudRepository;
 
+import java.util.Optional;
+
 /**
  * <pre>
  * 간략 : 토큰 매니저 레포지토리
@@ -17,4 +19,5 @@ import org.springframework.data.repository.CrudRepository;
  * 1.0 : 신규작성
  */
 public interface TokenSlaveRespository extends CrudRepository<TokenManagerEntity, TokenManagerPKEntity> {
+    Optional<TokenManagerEntity> findByIdAndToken(TokenManagerPKEntity pk, String token);
 }

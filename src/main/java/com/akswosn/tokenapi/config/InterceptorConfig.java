@@ -27,7 +27,7 @@ public class InterceptorConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(jwtInterceptor)
                 .addPathPatterns("/api/v1/**")
-                .excludePathPatterns("/api/v1/auth") //인증 요청 / 인증갱신 시 토큰감증 예외추가
+                .excludePathPatterns("/api/v1/auth/**") //인증 요청/갱신 시 토큰감증(-count) 예외추가
         ;
     }
 }
