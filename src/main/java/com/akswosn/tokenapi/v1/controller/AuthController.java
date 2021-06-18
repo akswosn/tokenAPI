@@ -1,5 +1,6 @@
 package com.akswosn.tokenapi.v1.controller;
 
+import com.akswosn.tokenapi.constants.TokenApiConst;
 import com.akswosn.tokenapi.entity.ResponseEntity;
 import com.akswosn.tokenapi.entity.token.ResponseToken;
 import com.akswosn.tokenapi.entity.user.RequestUser;
@@ -48,8 +49,9 @@ public class AuthController {
     })
     @PostMapping("")
     public ResponseEntity<ResponseToken> auth(@RequestBody RequestUser requestUser){
+
         ResponseEntity<ResponseToken> response = null;
-        log.debug("[POST]auth ::: {} ", requestUser);
+        log.info("[POST]auth ::: {} ", requestUser);
 
         try{
             // 필수값 검증
@@ -84,11 +86,10 @@ public class AuthController {
     @PostMapping("/refreshtoken")
     public ResponseEntity<ResponseToken> refresh(HttpServletRequest request){
         ResponseEntity<ResponseToken> response = null;
-
+        log.info("Call [POST] refreshtoken");
         try{
             // 필수값 검증
-            String refreshToken = request.getHeader("refreshToken");
-
+            String refreshToken = request.getHeader(TokenApiConst.HEADER_REFRESH_TOKEN_KEY);
 
             // 갱신 서비스 호출
             ResponseToken token = service.refresh(refreshToken);

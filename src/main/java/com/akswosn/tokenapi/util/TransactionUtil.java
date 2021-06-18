@@ -50,6 +50,10 @@ public class TransactionUtil {
         return td;
     }
 
+    /**
+     * commit
+     * @throws SQLTransientException
+     */
     public void commit() throws SQLTransientException {
         if(tranStatus == null){
             throw new SQLTransientException("Commit 실행 불가 상태입니다.(PlatformTransactionManager is null)");
@@ -58,6 +62,10 @@ public class TransactionUtil {
 
     }
 
+    /**
+     * Rollback
+     * @throws SQLTransientException
+     */
     public void rollback() throws SQLTransientException{
         if(tranStatus == null){
             throw new SQLTransientException("rollback 실행 불가 상태입니다.(PlatformTransactionManager is null)");

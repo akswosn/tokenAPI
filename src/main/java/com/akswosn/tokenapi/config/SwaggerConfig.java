@@ -56,7 +56,7 @@ public class SwaggerConfig {
 
     private SecurityContext securityContext() {
         return SecurityContext.builder().securityReferences(defaultAuth())
-                .forPaths(PathSelectors.regex("/api/v1/auth/refreshtoken.*"))
+                .forPaths(PathSelectors.regex("/api/v1(/auth/refreshtoken|/test).*"))
                 .build();
     }
 

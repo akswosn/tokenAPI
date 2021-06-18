@@ -1,6 +1,7 @@
 package com.akswosn.tokenapi.service;
 
 import com.akswosn.tokenapi.entity.token.ResponseToken;
+import com.akswosn.tokenapi.entity.token.TokenInfoEntity;
 import com.akswosn.tokenapi.entity.user.RequestUser;
 import com.akswosn.tokenapi.entity.user.UserEntity;
 
@@ -35,9 +36,17 @@ public interface AuthService {
     public ResponseToken refresh(String refreshToken) throws Exception;
 
     /**
-     * 토큰 검증
+     * 토큰 검증(유요한 토큰인지 검증)
      * @param token
      * @return
      */
     public boolean check(String token, String tokenName) throws Exception;
+
+    /**
+     * 토큰 엑세스 검증(count 차감)
+     * @param accessToken
+     * @return
+     * @throws Exception
+     */
+    public TokenInfoEntity checkAccess(String accessToken) throws Exception;
 }

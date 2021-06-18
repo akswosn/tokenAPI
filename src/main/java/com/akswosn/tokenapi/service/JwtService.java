@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import javax.crypto.spec.SecretKeySpec;
 import javax.xml.bind.DatatypeConverter;
 import java.security.Key;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -82,4 +83,7 @@ public interface JwtService {
     public String createAccessToken(RequestUser userEntity)throws Exception;
     public String createRefreshToken(RequestUser userEntity)throws Exception;
 
+    public boolean isUsable(String jwt);
+    public String getUserId(String key) throws Exception;
+    public LocalDateTime getExpiredTime(String key) throws Exception;
 }

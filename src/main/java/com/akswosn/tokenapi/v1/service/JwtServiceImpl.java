@@ -12,6 +12,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.xml.bind.DatatypeConverter;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -57,6 +61,7 @@ public class JwtServiceImpl implements JwtService {
      * @param jwt
      * @return
      */
+    @Override
     public boolean isUsable(String jwt){
         try {
             Claims claims = getClaimsMutator(jwt);
@@ -80,17 +85,36 @@ public class JwtServiceImpl implements JwtService {
      * @return
      * @throws Exception
      */
+    @Override
     public String getUserId(String key) throws Exception {
         try {
             Claims claims = getClaimsMutator(key);
 
-            Map<String, Object> value = (LinkedHashMap<String, Object>)claims.get("userId");
-            log.debug("value ::: {}",value);
+//            Map<String, Object> value = (LinkedHashMap<String, Object>)claims.get("userId");
+            log.info("value ::: {}",claims.get("userId"));
+            return claims.get("userId").toString();
 
         } catch (Exception e) {
             log.error("getUserId error::: {} ", e);
-            throw new Exception("사용자 죄회 실패");
+            throw new Exception("사용자 조회 실패");
         }
-        return null;
+
     }
+
+    @Override
+    public LocalDateTime getExpiredTime(String key) throws Exception {
+        try {
+            Claims claims = getClaimsMutator(key);
+
+            Date expired = claims.getExpiration();
+
+            return LocalDateTime.ofInstant(expired.toInstant(), ZoneId.systemDefault());
+
+        } catch (Exception e) {
+            log.error("getUserId error::: {} ", e);
+            throw new Exception("만료시간 조회 실패");
+        }
+    }
+
+
 }

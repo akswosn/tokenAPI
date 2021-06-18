@@ -1,6 +1,7 @@
 package com.akswosn.tokenapi.v1.service;
 
 import com.akswosn.tokenapi.entity.token.ResponseToken;
+import com.akswosn.tokenapi.entity.token.TokenInfoEntity;
 import com.akswosn.tokenapi.entity.token.TokenManagerEntity;
 import com.akswosn.tokenapi.entity.token.TokenManagerPKEntity;
 import com.akswosn.tokenapi.entity.user.RequestUser;
@@ -9,6 +10,7 @@ import com.akswosn.tokenapi.repository.master.token.TokenMasterRepository;
 import com.akswosn.tokenapi.repository.master.user.UserMasterRepository;
 import com.akswosn.tokenapi.repository.slave.token.TokenSlaveRespository;
 import com.akswosn.tokenapi.service.AuthService;
+import com.akswosn.tokenapi.service.JwtService;
 import com.akswosn.tokenapi.util.TransactionUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,7 +47,7 @@ public class AuthServiceImpl implements AuthService {
     private TokenSlaveRespository slaveRespository;
 
     @Autowired
-    private JwtServiceImpl jwtService;
+    private JwtService jwtService;
 
     @Autowired
     private TransactionUtil transactionUtil;
@@ -176,5 +178,47 @@ public class AuthServiceImpl implements AuthService {
 
         return false;
     }
+
+    /**
+     * 토큰 엑세스 검증(count 차감)
+     * @param accessToken
+     * @return
+     * @throws Exception
+     */
+    @Override
+    public TokenInfoEntity checkAccess(String accessToken) throws Exception {
+        //1. 토큰 변조/만료 시간 검증
+        boolean isUsable = jwtService.isUsable(accessToken);
+
+        TokenInfoEntity result = null;
+
+        //2. 토큰 user_id 와 token_manager 유효성 체크(토큰,회원 userId, tokenName(access../refresh..) 조회
+        String userId = jwtService.getUserId(accessToken);
+        List<TokenManagerEntity> dbData = slaveRespository.findByUserIdAndTokenNameAndToken(userId, JwtService.ACCESS_TOKEN_NAME, accessToken);
+        log.info("[checkAccess] dbData ::: {}", dbData);
+        if(dbData != null && dbData.size() > 0){
+            //3.토큰횟수 차감
+            TokenManagerEntity entity = dbData.get(0);  //기본키(복합키:userId, tokenName 로 복수개 조회되지 않음 불가!!)
+            if(entity.getAccessCount() == 0){
+                throw new Exception("토큰 인증 횟수 초과");
+            }
+            entity.setAccessCount(entity.getAccessCount()-1);
+            masterRepository.save(entity);//update 실행
+
+
+            result = TokenInfoEntity.builder()
+                    .expiredTime(jwtService.getExpiredTime(accessToken))
+                    .token(accessToken).accessCount(entity.getAccessCount())
+                    .build();
+
+        }
+        else {
+            throw new Exception("인증 토큰 갱신 필요");
+        }
+        log.info("[checkAccess] result ::: {}", result);
+
+        return result;
+    }
+
 
 }
