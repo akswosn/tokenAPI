@@ -28,12 +28,12 @@ import java.util.Map;
  */
 
 public interface JwtService {
-    final static long TOKEN_VALIDATION_SECOND = 1000L * 60 * 60 * 2; //2시간
-    final static long REFRESH_TOKEN_VALIDATION_SECOND = 1000L * 60 * 60 * 24 * 7; //7일
+    private final static long TOKEN_VALIDATION_SECOND = 1000L * 60 * 60 * 2; //2시간
+    private final static long REFRESH_TOKEN_VALIDATION_SECOND = 1000L * 60 * 60 * 24 * 7; //7일
 
     public final static String ACCESS_TOKEN_NAME = "accessToken";
     public final static String REFRESH_TOKEN_NAME = "refreshToken";
-    final static public String SECRET_KEY="token_secret";
+    private final static String SECRET_KEY="token_secret";
 
     /**
      * 토큰생성 공통
@@ -74,16 +74,54 @@ public interface JwtService {
         return builder.compact();
     }
 
+    /**
+     * JWT Claims 오브젝트 리턴
+     * @param token
+     * @return
+     * @throws ExpiredJwtException
+     * @throws JwtException
+     */
     default Claims getClaimsMutator(String token) throws ExpiredJwtException, JwtException{
         return Jwts.parser().setSigningKey(DatatypeConverter.parseBase64Binary(SECRET_KEY))
                 .parseClaimsJws(token).getBody();
     }
 
-    
+    /**
+     * Access Token 생성
+     * @param userEntity
+     * @return
+     * @throws Exception
+     */
     public String createAccessToken(RequestUser userEntity)throws Exception;
+
+    /**
+     * Refresh Token 생성
+     * @param userEntity
+     * @return
+     * @throws Exception
+     */
     public String createRefreshToken(RequestUser userEntity)throws Exception;
 
+    /**
+     * 토큰 사용여부 (만료시간, 토큰검증)
+     * @param jwt
+     * @return
+     */
     public boolean isUsable(String jwt);
+
+    /**
+     * 사용지 ID 조회
+     * @param key
+     * @return
+     * @throws Exception
+     */
     public String getUserId(String key) throws Exception;
+
+    /**
+     * 만료시간 조회
+     * @param key
+     * @return
+     * @throws Exception
+     */
     public LocalDateTime getExpiredTime(String key) throws Exception;
 }

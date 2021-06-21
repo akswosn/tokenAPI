@@ -2,11 +2,11 @@ package com.akswosn.tokenapi.repository.slave.user;
 
 import com.akswosn.tokenapi.entity.user.UserEntity;
 import lombok.SneakyThrows;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface UserSlaveRepository extends CrudRepository<UserEntity, String> {
+public interface UserSlaveRepository extends JpaRepository<UserEntity, String> {
     //slave 시 insert/update/delete 차단
     @SneakyThrows
     @Override
